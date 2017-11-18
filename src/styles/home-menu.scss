@@ -1,0 +1,13 @@
+.home-menu {
+    padding: 10px;
+
+    &__button {
+        display: block;
+        margin: auto;
+        padding: 10px;
+
+        h3 {
+            margin-top: 10px;
+        }
+    }
+}

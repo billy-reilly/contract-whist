@@ -1,0 +1,39 @@
+.top-nav {
+    text-align: left;
+    margin-top: 0px;
+    background-color: #373737;
+    color: white;
+    height: 60px;
+    border-bottom: 1px solid #191919;
+
+    .home-link {
+        display: inline-block;
+    }
+
+    a h1 {
+        color: white;
+        display: inline-block;
+        cursor: pointer;
+        margin: 0;
+        line-height: 60px;
+
+        span.contract {
+            font-family: 'Stardos Stencil', cursive;
+        }
+        span.whist {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        &:hover, &:active {
+            text-decoration: none;
+        }
+    }
+
+    .external-link {
+        display: inline-block;
+        margin: 0 15px;
+        line-height: 60px;
+        color: #ffffff;
+        font-size: 20px;
+    }
+}
