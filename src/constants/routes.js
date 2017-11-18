@@ -4,6 +4,7 @@
 // import { Redirect } from 'react-router-dom';
 
 import Menu from '../components/home/Menu';
+import Setup from '../components/setup/Setup';
 
 const routes = [
     {
@@ -11,6 +12,10 @@ const routes = [
         exact: true,
         component: Menu
     },
+    {
+        path: '/setup',
+        component: Setup
+    }
 ];
 
 export default routes;
