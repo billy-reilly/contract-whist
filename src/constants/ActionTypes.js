@@ -1,7 +1,7 @@
 import keyMirror from 'keymirror';
 
 const ActionTypes = keyMirror({
-    EXAMPLE_ACTION: null,
+    UPDATE_SETTINGS: null
 });
 
 export default ActionTypes;

@@ -10,9 +10,7 @@ export default function connectToStores(Component, stores, getStateFromStores) {
         state = getStateFromStores();
 
         componentDidMount() {
-            console.log(stores);
             stores.forEach(store => {
-                console.log('change listener added');
                 store.addChangeListener(this.handleStoresChanged)
             });
             this._isMounted = true;
@@ -20,7 +18,6 @@ export default function connectToStores(Component, stores, getStateFromStores) {
 
         componentWillUnmount() {
             stores.forEach(store => {
-                console.log('change listener removed');
                 store.removeChangeListener(this.handleStoresChanged)
             });
             this._isMounted = false

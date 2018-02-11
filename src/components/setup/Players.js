@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
-import { Button } from 'react-bootstrap';
+import { Button, FormControl } from 'react-bootstrap';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
+import { playerLimits } from '../../constants/AppConstants';
 
 export default class Players extends React.PureComponent {
     static propTypes = {
         players: PropTypes.instanceOf(List),
-        onAddPlayer: PropTypes.func.isRequired
+        onAddPlayer: PropTypes.func.isRequired,
+        onRemovePlayer: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -21,42 +25,75 @@ export default class Players extends React.PureComponent {
         this.setState({ 'value': e.target.value });
     }
 
-    onClick = () => {
+    onAddPlayer = () => {
         this.props.onAddPlayer(this.state.value);
         this.setState({ value: '' });
+        this.inputEl.focus();
+    }
+
+    onRemovePlayer = name => () => {
+        this.props.onRemovePlayer(name);
+        this.inputEl.focus();
     }
 
     render () {
         const { players } = this.props;
+        const tooFew = players.size < playerLimits.get('min');
+        const tooMany = players.size >= playerLimits.get('max');
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">Players</div>
-                <table className="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { players.map((player, key) => {
-                            const points = player.points > 0 ? player.points : 'New player';
-                            return (<tr key={ key }>
-                                <td>{ key + 1 }</td>
-                                <td>{ player.name }</td>
-                                <td>{ points }</td>
-                            </tr>);
-                        }) }
-                        <tr>
-                            <td>{ players.size + 1 }</td>
-                            <td>
-                                <input type="text" value={ this.state.value } onChange={ this.handleChange }/>
-                            </td>
-                            <td><Button onClick={ this.onClick }>Add player</Button></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div>
+                <div className="players-panel panel panel-default">
+                    <table className="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th width="60"/>
+                                <th>Name</th>
+                                <th width="100">Points</th>
+                                <th width="45"/>
+                            </tr>
+                        </thead>
+                        <ReactCSSTransitionGroup
+                                component="tbody"
+                                transitionName="player-rows"
+                                transitionEnterTimeout={ 200 }
+                                transitionLeaveTimeout={ 200 }>
+                            { players.map((player, key) => {
+                                const points = player.get('points') > 0
+                                    ? player.get('points') : 'New player';
+                                return (<tr key={ key }>
+                                    <td width="60">{ key + 1 }</td>
+                                    <td>{ player.get('name') }</td>
+                                    <td width="100">{ points }</td>
+                                    <td width="45">
+                                        <Button bsStyle="link"
+                                                onClick={ this.onRemovePlayer(player.name) }>
+                                            <span className="glyphicon glyphicon-remove-circle" />
+                                        </Button>
+                                    </td>
+                                </tr>);
+                            }) }
+                            { players.size < playerLimits.get('max') &&
+                                <tr>
+                                    <td width="60">{ players.size + 1 }</td>
+                                    <td>
+                                        <FormControl type="text"
+                                                     value={ this.state.value }
+                                                     onChange={ this.handleChange }
+                                                     inputRef={ el => { this.inputEl = el; } }/>
+                                    </td>
+                                    <td width="100">
+                                        <Button onClick={ this.onAddPlayer }>Add player</Button>
+                                    </td>
+                                    <td width="45"/>
+                                </tr> }
+                        </ReactCSSTransitionGroup>
+                    </table>
+                </div>
+                { (tooFew || tooMany) && (<div>
+                    <em>
+                        { tooFew ? 'Min. 3 players' : 'Max. 7 players' }
+                    </em>
+                </div>) }
             </div>
         );
     }

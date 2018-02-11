@@ -1,42 +1,85 @@
 import React from 'react';
-import { Checkbox } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
-import Players from './Players';
-
+import { playerLimits } from '../../constants/AppConstants';
 import Settings from '../../records/Settings';
+import Step from '../general/steppableInterface/Step';
 
-export default class Setup extends React.PureComponent {
-    state = {
-        settings: new Settings()
+import connectToStores from '../../helpers/connectToStores';
+import SettingsActions from '../../actions/SettingsActions';
+import SettingsStore from '../../stores/SettingsStore';
+
+import SteppableInterface from '../general/steppableInterface';
+import Players from './Players';
+import Options from './Options';
+
+function _getStateFromStore () {
+    return {
+        settings: SettingsStore.getAll()
     }
+}
+
+class Setup extends React.PureComponent {
+
+    static propTypes = {
+        settings: PropTypes.instanceOf(Settings)
+    };
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            history: PropTypes.shape({
+                push: PropTypes.func
+            })
+        })
+    };
 
     handleAddPlayer = (name) => {
-        this.setState({ 'settings': this.state.settings.addPlayer(name) })
+        SettingsActions.updateSettings(this.props.settings.addPlayer(name));
+    }
+
+    handleRemovePlayer = (name) => {
+        SettingsActions.updateSettings(this.props.settings.removePlayer(name));
     }
 
     handleToggleCheckbox = (field) => () => {
-        this.setState({ 'settings': this.state.settings.set(field, !this.state.settings.get(field)) })
+        SettingsActions.updateSettings(
+            this.props.settings.set(field, !this.props.settings.get(field))
+        );
+    }
+
+    steps = () => {
+        const { settings } = this.props;
+        return [
+            new Step({
+                name: 'Enter players',
+                element: Players,
+                elementProps: {
+                    players: settings.get('players'),
+                    onAddPlayer: this.handleAddPlayer,
+                    onRemovePlayer: this.handleRemovePlayer
+                },
+                nextDisabled: settings.get('players').size < playerLimits.get('min'),
+                hideBack: true
+            }),
+            new Step({
+                name: 'Select options',
+                element: Options,
+                elementProps: {
+                    settings: settings,
+                    onToggleCheckbox: this.handleToggleCheckbox
+                },
+                nextAction: () => this.context.router.history.push('/')
+            })
+        ];
     }
 
     render () {
-        console.log(this.state.settings);
         return (
-            <div>
-                <h2>Settings</h2>
-                <Players players={ this.state.settings.get('players') }
-                         onAddPlayer={ this.handleAddPlayer } />
-                <Checkbox checked={ this.state.settings.get('chooseOwnDealer') } 
-                          onChange={ this.handleToggleCheckbox('chooseOwnDealer') }
-                          inline>
-                    Choose your own dealer
-                </Checkbox>
-                <br/>
-                <Checkbox checked={ this.state.settings.get('shortGame') } 
-                          onChange={ this.handleToggleCheckbox('shortGame') }
-                          inline>
-                    Play fast games (7 rounds instead of 13)
-                </Checkbox>
+            <div className="setup__wrapper">
+                <SteppableInterface steps={ this.steps() }/>
             </div>
         );
     }
 }
+
+export default connectToStores(Setup, [ SettingsStore ], _getStateFromStore);

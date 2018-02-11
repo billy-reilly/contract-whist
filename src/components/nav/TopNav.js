@@ -13,7 +13,7 @@ export default function TopNav () {
                 </Link>
                 <div className="pull-right">
                     <ExternalLink url="https://www.theguardian.com/lifeandstyle/2008/nov/22/rules-card-games-oh-hell" glyphicon="list-alt" description="Rules"/>
-                    <ExternalLink url="https://github.com/" glyphicon="console" description="Source code" />
+                    <ExternalLink url="https://github.com/billy-reilly/contract-whist" glyphicon="console" description="Source code" />
                 </div>
             </div>
         </div>

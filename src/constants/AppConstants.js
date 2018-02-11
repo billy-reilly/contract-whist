@@ -1,4 +1,6 @@
-export const exampleConstants = {
-    one: 1,
-    two: 2
-}
+import { Map } from 'immutable';
+
+export const playerLimits = Map({
+    min: 3,
+    max: 7
+});

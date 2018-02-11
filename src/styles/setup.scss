@@ -1,0 +1,35 @@
+.setup__wrapper {
+    padding-top: 20px;
+}
+
+.players-panel {
+    h3 {
+        margin: 5px;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    .player-rows-enter {
+        opacity: 0;
+    }
+
+    .player-rows-enter.player-rows-enter-active {
+        opacity: 1;
+        -webkit-transition: opacity 0.2s ease-in;
+    }
+
+    .player-rows-leave {
+        opacity: 1;
+    }
+
+    .player-rows-leave.player-rows-leave-active {
+        opacity: 0;
+        -webkit-transition: opacity 0.2s ease-in;
+    }
+
+    .btn-link {
+        padding: 0;
+    }
+}

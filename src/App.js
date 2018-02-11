@@ -10,6 +10,7 @@ import routes from './constants/routes';
 import config from './constants/config';
 
 import TopNav from './components/nav/TopNav';
+import Menu from './components/home/Menu';
 
 import './styles/main.css';
 
@@ -34,7 +35,7 @@ export default class App extends React.PureComponent {
                                                 path={ route.path }
                                                 component={ route.component } />
                                         )) }
-                                        <Route component={ () => <div>redirected</div> } />
+                                        <Route component={ Menu } />
                                     </Switch>
                                 </Col>
                             </Row>
