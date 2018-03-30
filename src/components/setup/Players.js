@@ -33,7 +33,9 @@ export default class Players extends React.PureComponent {
 
     onRemovePlayer = name => () => {
         this.props.onRemovePlayer(name);
-        this.inputEl.focus();
+        if (this.inputEl) {
+            this.inputEl.focus();
+        }
     }
 
     render () {
@@ -53,10 +55,10 @@ export default class Players extends React.PureComponent {
                             </tr>
                         </thead>
                         <ReactCSSTransitionGroup
-                                component="tbody"
-                                transitionName="player-rows"
-                                transitionEnterTimeout={ 200 }
-                                transitionLeaveTimeout={ 200 }>
+                            component="tbody"
+                            transitionName="player-rows"
+                            transitionEnterTimeout={ 200 }
+                            transitionLeaveTimeout={ 200 }>
                             { players.map((player, key) => {
                                 const points = player.get('points') > 0
                                     ? player.get('points') : 'New player';
@@ -66,7 +68,7 @@ export default class Players extends React.PureComponent {
                                     <td width="100">{ points }</td>
                                     <td width="45">
                                         <Button bsStyle="link"
-                                                onClick={ this.onRemovePlayer(player.name) }>
+                                            onClick={ this.onRemovePlayer(player.name) }>
                                             <span className="glyphicon glyphicon-remove-circle" />
                                         </Button>
                                     </td>
@@ -77,9 +79,9 @@ export default class Players extends React.PureComponent {
                                     <td width="60">{ players.size + 1 }</td>
                                     <td>
                                         <FormControl type="text"
-                                                     value={ this.state.value }
-                                                     onChange={ this.handleChange }
-                                                     inputRef={ el => { this.inputEl = el; } }/>
+                                            value={ this.state.value }
+                                            onChange={ this.handleChange }
+                                            inputRef={ el => { this.inputEl = el; } }/>
                                     </td>
                                     <td width="100">
                                         <Button onClick={ this.onAddPlayer }>Add player</Button>

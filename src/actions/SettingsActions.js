@@ -7,7 +7,7 @@ const SettingsActions = {
         AppDispatcher.dispatch({
             settings,
             actionType: ActionTypes.UPDATE_SETTINGS
-        })
+        });
     }
 
 };

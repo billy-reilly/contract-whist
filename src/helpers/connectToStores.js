@@ -11,16 +11,16 @@ export default function connectToStores(Component, stores, getStateFromStores) {
 
         componentDidMount() {
             stores.forEach(store => {
-                store.addChangeListener(this.handleStoresChanged)
+                store.addChangeListener(this.handleStoresChanged);
             });
             this._isMounted = true;
         }
 
         componentWillUnmount() {
             stores.forEach(store => {
-                store.removeChangeListener(this.handleStoresChanged)
+                store.removeChangeListener(this.handleStoresChanged);
             });
-            this._isMounted = false
+            this._isMounted = false;
         }
 
         handleStoresChanged = () => {
@@ -30,7 +30,7 @@ export default function connectToStores(Component, stores, getStateFromStores) {
         }
 
         render() {
-            return <Component { ...this.state } />;
+            return <Component { ...this.state } { ...this.props } />;
         }
     };
 }

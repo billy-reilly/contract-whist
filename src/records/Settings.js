@@ -9,6 +9,15 @@ const defaults = {
 };
 
 export default class Settings extends record(defaults) {
+    static fromJSON (json) {
+        const { players, chooseOwnDealer, shortGame } = json;
+        return new Settings({
+            players: List.of(...players.map(player => new Player(player))),
+            chooseOwnDealer,
+            shortGame
+        });
+    }
+
     hasTooFewPlayers () {
         return this.players.size <= 3;
     }

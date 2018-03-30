@@ -1,40 +1,27 @@
 import { EventEmitter } from 'events';
-import { Map } from 'immutable';
-import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'change';
 
-const EMITTERS = {};
-
 export default class BaseStore {
-    constructor({ storeName }) {
-        Object.assign(this, { storeName });
-        let emitter = new EventEmitter();
+    constructor({ storeName, type }) {
+        this.storeName = storeName;
+        this.type = type;
+        const emitter = new EventEmitter();
         emitter.setMaxListeners(0);
-        EMITTERS[this.storeName] = emitter;
-        this.registerActionHandlers();
+        this.emitter = emitter;
         this.state = this.getStateFromLocalStorage();
     }
 
-    registerActionHandlers () { // to change
-        const handlers = this.getActionHandlers();
-        if (handlers) {
-            AppDispatcher.register((payload) => {
-                return handlers[payload.actionType] && handlers[payload.actionType].call(this, payload);
-            });
-        }
-    }
-
     addChangeListener (callback) {
-        EMITTERS[this.storeName].on(CHANGE_EVENT, callback);
+        this.emitter.on(CHANGE_EVENT, callback);
     }
 
     removeChangeListener (callback) {
-        EMITTERS[this.storeName].on(CHANGE_EVENT, callback);
+        this.emitter.on(CHANGE_EVENT, callback);
     }
 
     emitChange () {
-        EMITTERS[this.storeName].emit(CHANGE_EVENT);
+        this.emitter.emit(CHANGE_EVENT);
     }
 
     getAll () {
@@ -42,11 +29,12 @@ export default class BaseStore {
     }
 
     getStateFromLocalStorage () {
+        const Type = this.type;
         const savedJSONState = localStorage.getItem(this.storeName);
         if (savedJSONState) {
-            return new Map(JSON.parse(savedJSONState));
+            return Type.fromJSON(JSON.parse(savedJSONState));
         }
-        return null;
+        return new Type();
     }
 
     setLocalStorage (newState) {

@@ -16,7 +16,7 @@ import Options from './Options';
 function _getStateFromStore () {
     return {
         settings: SettingsStore.getAll()
-    }
+    };
 }
 
 class Setup extends React.PureComponent {

@@ -19,7 +19,7 @@ module.exports = {
         "indent": [
             "error",
             4,
-            { "indentSwitchCase": true }
+            { "SwitchCase": 1 }
         ],
         "no-console": ["warn", { allow: ["warn", "error"] }],
         "no-underscore-dangle": [0],

@@ -1,34 +1,28 @@
-import { fromJS } from 'immutable'
+import AppDispatcher from '../dispatcher/AppDispatcher';
 
 import BaseStore from './BaseStore';
 import ActionTypes from '../constants/ActionTypes';
 import Settings from '../records/Settings';
-import Player from '../records/Player';
 
 class SettingsStore extends BaseStore {
+    constructor({ storeName, type }) {
+        super({ storeName, type });
 
-    getActionHandlers () {
-        return {
-            [ActionTypes.UPDATE_SETTINGS]: this.updateSettings
-        };
+        AppDispatcher.register((payload) => {
+            switch (payload.actionType) {
+                case ActionTypes.UPDATE_SETTINGS:
+                    this.updateSettings(payload);
+                    break;
+            }
+        });
     }
 
     updateSettings ({ settings }) {
         this.updateState(settings);
     }
 
-    getStateFromLocalStorage () {
-        const savedJSONState = localStorage.getItem(this.storeName);
-        if (savedJSONState) {
-            const immutableData = fromJS(JSON.parse(savedJSONState));
-            const correctedPlayers = immutableData.get('players').map(data => new Player(data));
-            return new Settings(immutableData.set('players', correctedPlayers));
-        }
-        return new Settings();
-    }
-
 }
 
-const instance = new SettingsStore({ storeName: 'settings' });
+const instance = new SettingsStore({ storeName: 'settings', type: Settings });
 
 export default instance;
