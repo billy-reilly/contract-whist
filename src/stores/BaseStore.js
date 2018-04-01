@@ -15,7 +15,7 @@ export default class BaseStore extends EventEmitter {
     }
 
     removeChangeListener (callback) {
-        this.on(CHANGE_EVENT, callback);
+        this.removeListener(CHANGE_EVENT, callback);
     }
 
     emitChange () {
