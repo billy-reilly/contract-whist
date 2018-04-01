@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { playerLimits } from '../../constants/AppConstants';
 import Settings from '../../records/Settings';
 import Step from '../general/steppableInterface/Step';
 
 import connectToStores from '../../helpers/connectToStores';
-import SettingsActions from '../../actions/SettingsActions';
-import SettingsStore from '../../stores/SettingsStore';
+import GameActions from '../../actions/GameActions';
+import CurrentGameStore from '../../stores/CurrentGameStore';
 
 import SteppableInterface from '../general/steppableInterface';
 import Players from './Players';
@@ -15,7 +14,7 @@ import Options from './Options';
 
 function _getStateFromStore () {
     return {
-        settings: SettingsStore.getAll()
+        settings: CurrentGameStore.getAll().get('settings')
     };
 }
 
@@ -34,18 +33,18 @@ class Setup extends React.PureComponent {
     };
 
     handleAddPlayer = (name) => {
-        SettingsActions.updateSettings(this.props.settings.addPlayer(name));
-    }
+        GameActions.updateSettings(this.props.settings.addPlayer(name));
+    };
 
     handleRemovePlayer = (name) => {
-        SettingsActions.updateSettings(this.props.settings.removePlayer(name));
-    }
+        GameActions.updateSettings(this.props.settings.removePlayer(name));
+    };
 
     handleToggleCheckbox = (field) => () => {
-        SettingsActions.updateSettings(
+        GameActions.updateSettings(
             this.props.settings.set(field, !this.props.settings.get(field))
         );
-    }
+    };
 
     steps = () => {
         const { settings } = this.props;
@@ -58,7 +57,7 @@ class Setup extends React.PureComponent {
                     onAddPlayer: this.handleAddPlayer,
                     onRemovePlayer: this.handleRemovePlayer
                 },
-                nextDisabled: settings.get('players').size < playerLimits.get('min'),
+                nextDisabled: settings.hasTooFewPlayers(),
                 hideBack: true
             }),
             new Step({
@@ -68,10 +67,13 @@ class Setup extends React.PureComponent {
                     settings: settings,
                     onToggleCheckbox: this.handleToggleCheckbox
                 },
-                nextAction: () => this.context.router.history.push('/')
+                nextAction: () => {
+                    GameActions.startNewRound();
+                    this.context.router.history.push('/game');
+                }
             })
         ];
-    }
+    };
 
     render () {
         return (
@@ -82,4 +84,4 @@ class Setup extends React.PureComponent {
     }
 }
 
-export default connectToStores(Setup, [ SettingsStore ], _getStateFromStore);
+export default connectToStores(Setup, [ CurrentGameStore ], _getStateFromStore);

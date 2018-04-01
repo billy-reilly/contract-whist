@@ -40,8 +40,8 @@ export default class Players extends React.PureComponent {
 
     render () {
         const { players } = this.props;
-        const tooFew = players.size < playerLimits.get('min');
-        const tooMany = players.size >= playerLimits.get('max');
+        const tooFew = players.size < playerLimits.min;
+        const tooMany = players.size >= playerLimits.max;
         return (
             <div>
                 <div className="players-panel panel panel-default">
@@ -74,7 +74,7 @@ export default class Players extends React.PureComponent {
                                     </td>
                                 </tr>);
                             }) }
-                            { players.size < playerLimits.get('max') &&
+                            { players.size < playerLimits.max &&
                                 <tr>
                                     <td width="60">{ players.size + 1 }</td>
                                     <td>

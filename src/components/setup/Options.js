@@ -8,15 +8,15 @@ import Settings from '../../records/Settings';
 export default function Options ({ settings, onToggleCheckbox }) {
     return (
         <div>
-            <Checkbox checked={ settings.get('chooseOwnDealer') } 
-                      onChange={ onToggleCheckbox('chooseOwnDealer') }
-                      inline>
+            <Checkbox checked={ settings.get('chooseOwnDealer') }
+                onChange={ onToggleCheckbox('chooseOwnDealer') }
+                inline>
                 Choose your own dealer
             </Checkbox>
             <br/>
             <Checkbox checked={ settings.get('shortGame') } 
-                      onChange={ onToggleCheckbox('shortGame') }
-                      inline>
+                onChange={ onToggleCheckbox('shortGame') }
+                inline>
                 Fast games (7 rounds instead of 13)
             </Checkbox>
         </div>

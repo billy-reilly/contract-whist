@@ -10,7 +10,7 @@ import routes from './constants/routes';
 import config from './constants/config';
 
 import TopNav from './components/nav/TopNav';
-import Menu from './components/home/Menu';
+import Home from './components/home';
 
 import './styles/main.css';
 
@@ -21,27 +21,26 @@ export default class App extends React.PureComponent {
         return (
             <div className="app-container container-fluid">
                 <Row>
-                <Router>
-                    <div>
-                        <TopNav />
-                        
-                        <section className="main container-fluid">
-                            <Row>
-                                <Col { ...colWidths }>
-                                    <Switch>
-                                        { routes.map((route, index) => (
-                                            <Route key={ index }
-                                                exact={ route.exact }
-                                                path={ route.path }
-                                                component={ route.component } />
-                                        )) }
-                                        <Route component={ Menu } />
-                                    </Switch>
-                                </Col>
-                            </Row>
-                        </section> 
-                    </div>
-                </Router>
+                    <Router>
+                        <div>
+                            <TopNav />
+                            <section className="main container-fluid">
+                                <Row>
+                                    <Col { ...colWidths }>
+                                        <Switch>
+                                            { routes.map((route, index) => (
+                                                <Route key={ index }
+                                                    exact={ route.exact }
+                                                    path={ route.path }
+                                                    component={ route.component } />
+                                            )) }
+                                            <Route component={ Home } />
+                                        </Switch>
+                                    </Col>
+                                </Row>
+                            </section>
+                        </div>
+                    </Router>
                 </Row>
             </div>
         );

@@ -1,20 +1,20 @@
-/* eslint-disable react/no-multi-comp */
-
-// import React from 'react';
-// import { Redirect } from 'react-router-dom';
-
-import Menu from '../components/home/Menu';
-import Setup from '../components/setup/Setup';
+import Home from '../components/home';
+import Setup from '../components/setup';
+import Game from '../components/game';
 
 const routes = [
     {
         path: '/',
         exact: true,
-        component: Menu
+        component: Home
     },
     {
         path: '/setup',
         component: Setup
+    },
+    {
+        path: '/game',
+        component: Game
     }
 ];
 

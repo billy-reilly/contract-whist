@@ -9,7 +9,7 @@ export default function TopNav () {
         <div role="navigation" className="top-nav">
             <div className="container">
                 <Link to="/" className="home-link">
-                    <h1><span className="contract">Contract</span> <span className="whist">Whist</span></h1>
+                    <h1>Contract Whist</h1>
                 </Link>
                 <div className="pull-right">
                     <ExternalLink url="https://www.theguardian.com/lifeandstyle/2008/nov/22/rules-card-games-oh-hell" glyphicon="list-alt" description="Rules"/>

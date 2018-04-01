@@ -1,6 +1,5 @@
-import { Map } from 'immutable';
-
-export const playerLimits = Map({
+export const playerLimits = {
     min: 3,
     max: 7
-});
+};
+

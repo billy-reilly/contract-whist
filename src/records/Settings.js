@@ -1,6 +1,7 @@
 import { Record as record, List } from 'immutable';
 
 import Player from './Player';
+import { playerLimits } from '../constants/AppConstants';
 
 const defaults = {
     players: new List(),
@@ -10,21 +11,24 @@ const defaults = {
 
 export default class Settings extends record(defaults) {
     static fromJSON (json) {
-        const { players, chooseOwnDealer, shortGame } = json;
-        return new Settings({
-            players: List.of(...players.map(player => new Player(player))),
-            chooseOwnDealer,
-            shortGame
-        });
+        if (json) {
+            const { players, chooseOwnDealer, shortGame } = json;
+            return new Settings({
+                players: List.of(...players.map(player => new Player(player))),
+                chooseOwnDealer,
+                shortGame
+            });
+        }
+        return new Settings();
     }
 
     hasTooFewPlayers () {
-        return this.players.size <= 3;
+        return this.players.size < playerLimits.min;
     }
 
-    hasMaxPlayers () {
-        return this.players.size >= 7;
-    }
+    // hasMaxPlayers () {
+    //     return this.players.size >= playerLimits.max;
+    // }
 
     addPlayer (name) {
         const newPlayers = this.players.push(new Player({ name }));
