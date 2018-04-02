@@ -9,7 +9,7 @@ class CurrentGameStore extends BaseStore {
     constructor({ storeName, type }) {
         super({ storeName, type });
 
-        AppDispatcher.register((payload) => {
+        AppDispatcher.register(payload => {
             switch (payload.actionType) {
                 case ActionTypes.SET_UP_NEW_GAME:
                     this.refreshStore();

@@ -1,20 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
-import { Button, FormControl } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { playerLimits } from '../../constants/AppConstants';
+import Player from '../../records/Player';
+import Leaderboard from '../../records/Leaderboard';
+import LeaderboardActions from '../../actions/LeaderboardActions';
+import LeaderboardStore from '../../stores/LeaderboardStore';
+import connectToStores from '../../helpers/connectToStores';
 
-export default class Players extends React.PureComponent {
+import PlayerInput from './PlayerInput';
+
+function _getStateFromStores () {
+    const leaderboard = LeaderboardStore.getAll();
+    return { leaderboard };
+}
+
+class Players extends React.PureComponent {
     static propTypes = {
         players: PropTypes.instanceOf(List),
+        leaderboard: PropTypes.instanceOf(Leaderboard),
         onAddPlayer: PropTypes.func.isRequired,
         onRemovePlayer: PropTypes.func.isRequired
     };
 
     static defaultProps = {
-        players: new List()
+        players: new List(),
+        leaderboard: new Leaderboard()
     };
 
     state = {
@@ -25,8 +39,16 @@ export default class Players extends React.PureComponent {
         this.setState({ 'value': e.target.value });
     }
 
-    onAddPlayer = () => {
-        this.props.onAddPlayer(this.state.value);
+    onAddNewPlayer = () => {
+        const player = new Player({ name: this.state.value });
+        if (!this.props.leaderboard.matchesSavedPlayer(player)) {
+            LeaderboardActions.addPlayer(player);
+        }
+        this.handleAddPlayer(player);
+    }
+
+    handleAddPlayer = player => {
+        this.props.onAddPlayer(player);
         this.setState({ value: '' });
         this.inputEl.focus();
     }
@@ -39,7 +61,7 @@ export default class Players extends React.PureComponent {
     }
 
     render () {
-        const { players } = this.props;
+        const { players, leaderboard } = this.props;
         const tooFew = players.size < playerLimits.min;
         const tooMany = players.size >= playerLimits.max;
         return (
@@ -78,13 +100,15 @@ export default class Players extends React.PureComponent {
                                 <tr>
                                     <td width="60">{ players.size + 1 }</td>
                                     <td>
-                                        <FormControl type="text"
-                                            value={ this.state.value }
-                                            onChange={ this.handleChange }
-                                            inputRef={ el => { this.inputEl = el; } }/>
+                                        <PlayerInput onChange={ this.handleChange }
+                                            chosenPlayers={ players }
+                                            leaderboard={ leaderboard }
+                                            onSelectExisting={ this.handleAddPlayer }
+                                            inputValue={ this.state.value }
+                                            inputRef={ el => { this.inputEl = el; } } />
                                     </td>
                                     <td width="100">
-                                        <Button onClick={ this.onAddPlayer }>Add player</Button>
+                                        <Button onClick={ this.onAddNewPlayer }>Add player</Button>
                                     </td>
                                     <td width="45"/>
                                 </tr> }
@@ -100,3 +124,4 @@ export default class Players extends React.PureComponent {
         );
     }
 }
+export default connectToStores(Players, [ LeaderboardStore ], _getStateFromStores);

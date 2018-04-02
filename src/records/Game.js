@@ -13,7 +13,7 @@ export default class Game extends record(defaults) {
         const { settings, rounds } = json;
         return new Game({
             settings: Settings.fromJSON(settings),
-            rounds: List.of(...rounds.map(round => new Round(round)))
+            rounds: List.of(...rounds.map(round => Round.fromJSON(round)))
         });
     }
 

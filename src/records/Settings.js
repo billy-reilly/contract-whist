@@ -30,8 +30,8 @@ export default class Settings extends record(defaults) {
     //     return this.players.size >= playerLimits.max;
     // }
 
-    addPlayer (name) {
-        const newPlayers = this.players.push(new Player({ name }));
+    addPlayer (player) {
+        const newPlayers = this.players.push(player);
         return this.set('players', newPlayers);
     }
 
